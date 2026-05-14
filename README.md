@@ -1,2 +1,966 @@
-# your-health
-pharmacy landing page 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Your Health Diagnostic Center | Pharmacy & Medical Lab</title>
+  <!-- Google Fonts + Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafc;
+      color: #1e2a3e;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      font-size: 12px;
+    }
+
+    /* ========== PRELOADER STYLES (4 SECONDS) ========== */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .preloader.hide-preloader {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .preloader-content {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 60px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+      min-width: 280px;
+    }
+
+    /* Medical Logo Animation */
+    .preloader-icon {
+      font-size: 4.5rem;
+      color: #0d9488;
+      animation: pulseMedical 1.2s infinite ease-in-out;
+      margin-bottom: 20px;
+    }
+
+    @keyframes pulseMedical {
+      0% {
+        transform: scale(0.95);
+        text-shadow: 0 0 0 rgba(13, 148, 136, 0.3);
+      }
+      50% {
+        transform: scale(1.1);
+        text-shadow: 0 0 18px rgba(13, 148, 136, 0.5);
+        color: #0f766e;
+      }
+      100% {
+        transform: scale(0.95);
+        text-shadow: 0 0 0 rgba(13, 148, 136, 0.3);
+      }
+    }
+
+    .preloader-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0b6e4f, #0891b2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin-bottom: 20px;
+    }
+
+    /* Progress bar (4 seconds duration) */
+    .preloader-progress {
+      width: 220px;
+      height: 5px;
+      background-color: #e2e8f0;
+      border-radius: 10px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .preloader-progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #0d9488, #0891b2);
+      border-radius: 10px;
+      animation: progressAnimation 4s linear forwards;
+    }
+
+    @keyframes progressAnimation {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    .preloader-sub {
+      font-size: 0.8rem;
+      color: #5b6e8c;
+      margin-top: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Hide body content initially (prevent flash) */
+    .main-content {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .main-content.visible {
+      opacity: 1;
+    }
+
+    /* container utility */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* header & navigation */
+    .header {
+      background: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(2px);
+      background-color: rgba(255,255,255,0.96);
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 18px 0;
+    }
+
+    .logo h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #0b6e4f, #0891b2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+    .logo p {
+      font-size: 0.75rem;
+      color: #4b5563;
+      letter-spacing: 0.5px;
+    }
+
+    /* DESKTOP MENU - hidden on mobile, shown on desktop */
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #1e293b;
+      transition: 0.2s;
+      font-size: 1rem;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: #0f766e;
+      border-bottom: 2px solid #0f766e;
+      padding-bottom: 4px;
+    }
+
+    .btn-appoint {
+      background: #0d9488;
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 40px;
+      border-bottom: none !important;
+    }
+    .btn-appoint:hover {
+      background: #0f766e;
+      transform: translateY(-2px);
+    }
+
+    /* === MOBILE HAMBURGER (three-line bar) === */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.9rem;
+      cursor: pointer;
+      color: #0f766e;
+      padding: 8px;
+      transition: 0.2s;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Mobile Menu Overlay (full screen dim + drawer) */
+    .mobile-nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0.2s, opacity 0.2s;
+    }
+
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 75%;
+      max-width: 320px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 2001;
+    }
+
+    .mobile-nav-overlay.open {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .mobile-nav-overlay.open .mobile-nav-drawer {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2rem;
+    }
+    .close-drawer {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #1e2a3e;
+    }
+    .drawer-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+    .drawer-nav-list li a {
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #115e66;
+      display: block;
+      padding: 8px 0;
+      border-bottom: 1px solid #e2e8f0;
+      transition: 0.2s;
+    }
+    .drawer-nav-list li a i {
+      width: 28px;
+      margin-right: 12px;
+      color: #2c9aaf;
+    }
+
+    /* RESPONSIVE: Mobile view (max-width: 992px) - hide desktop nav-links, show hamburger */
+    @media (max-width: 992px) {
+      .nav-links {
+        display: none;
+      }
+      .mobile-menu-toggle {
+        display: flex;
+      }
+      .logo h1 {
+        font-size: 1.3rem;
+      }
+    }
+
+    /* Hero section */
+    .hero {
+      background: linear-gradient(120deg, #e0f2fe 0%, #ccfbf1 100%);
+      padding: 70px 0;
+      border-radius: 0 0 50px 50px;
+    }
+    .hero-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 40px;
+    }
+    .hero-content {
+      flex: 1;
+    }
+    .hero-content h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: #0c4a6e;
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      color: #334155;
+      margin-bottom: 30px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-primary, .btn-secondary {
+      padding: 12px 32px;
+      border-radius: 40px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #0f766e;
+      color: white;
+      box-shadow: 0 5px 12px rgba(15,118,110,0.3);
+    }
+    .btn-primary:hover {
+      background: #0b5e58;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: white;
+      color: #0f766e;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-secondary:hover {
+      background: #f1f5f9;
+    }
+    .hero-image {
+      flex: 1;
+      text-align: center;
+    }
+    .hero-image i {
+      font-size: 14rem;
+      color: #0d9488;
+      opacity: 0.8;
+    }
+
+    /* Features / Services */
+    .section {
+      padding: 80px 0;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 2.3rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #0f172a;
+    }
+    .section-sub {
+      text-align: center;
+      color: #475569;
+      max-width: 680px;
+      margin: 0 auto 48px auto;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+    .service-card {
+      background: white;
+      border-radius: 28px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: 0.25s ease;
+      box-shadow: 0 12px 24px -12px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.12);
+    }
+    .service-icon {
+      font-size: 2.8rem;
+      color: #0d9488;
+      margin-bottom: 20px;
+    }
+    .service-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .service-card p {
+      color: #4b5563;
+    }
+
+    /* pharmacy specific */
+    .pharmacy-row {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-radius: 48px;
+      padding: 48px 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: center;
+    }
+    .pharmacy-info {
+      flex: 1;
+    }
+    .pharmacy-info h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #14532d;
+    }
+    .pharmacy-info .badge {
+      background: #15803d;
+      color: white;
+      padding: 4px 14px;
+      border-radius: 60px;
+      display: inline-block;
+      font-size: 0.8rem;
+      margin-bottom: 16px;
+    }
+    .medicine-list {
+      margin-top: 20px;
+      list-style: none;
+    }
+    .medicine-list li {
+      margin: 12px 0;
+      font-weight: 500;
+    }
+    .medicine-list i {
+      color: #15803d;
+      width: 28px;
+    }
+
+    /* diagnostic packages */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap: 25px;
+      margin-top: 10px;
+    }
+    .package-card {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      border-left: 6px solid #0d9488;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+      transition: 0.2s;
+    }
+    .package-card h4 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    .price {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #0f766e;
+      margin: 12px 0;
+    }
+    .package-features {
+      list-style: none;
+      margin: 16px 0;
+    }
+    .package-features li {
+      padding: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    /* Doctor / specialist team */
+    .team-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+    .team-card {
+      background: white;
+      border-radius: 32px;
+      width: 260px;
+      text-align: center;
+      padding: 30px 16px 24px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    .team-card i {
+      font-size: 4rem;
+      color: #2c7a6e;
+      background: #e6fffa;
+      padding: 20px;
+      border-radius: 100px;
+    }
+    .team-card h4 {
+      margin-top: 18px;
+      font-size: 1.3rem;
+    }
+    .team-card p {
+      color: #5b677b;
+    }
+
+    /* Appointment form */
+    .appointment-section {
+      background: #1e293b;
+      color: white;
+      border-radius: 48px;
+    }
+    .form-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: center;
+    }
+    .form-text {
+      flex: 1;
+    }
+    .form-text h3 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    .appointment-form {
+      flex: 1;
+      background: white;
+      padding: 32px;
+      border-radius: 32px;
+      color: #0f172a;
+    }
+    .input-group {
+      margin-bottom: 16px;
+    }
+    .input-group input, .input-group select, .input-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 28px;
+      border: 1px solid #cbd5e1;
+      font-family: inherit;
+    }
+    .form-btn {
+      background: #0d9488;
+      border: none;
+      width: 100%;
+      padding: 14px;
+      border-radius: 40px;
+      font-weight: bold;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    /* footer */
+    .footer {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 48px 0 24px;
+      margin-top: 40px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      gap: 30px;
+    }
+    .footer-col h4 {
+      color: white;
+      margin-bottom: 18px;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col li, .footer-col p {
+      margin: 8px 0;
+    }
+    .social-icons a {
+      color: #cbd5e1;
+      margin-right: 16px;
+      font-size: 1.3rem;
+    }
+    .copyright {
+      text-align: center;
+      padding-top: 40px;
+      font-size: 0.8rem;
+      border-top: 1px solid #334155;
+      margin-top: 30px;
+    }
+
+    /* responsive adjustments */
+    @media (max-width: 768px) {
+      .hero-content h2 {
+        font-size: 1.9rem;
+      }
+      .hero-image i {
+        font-size: 2rem;
+      }
+      .section-title {
+        font-size: 1.8rem;
+      }
+      .pharmacy-row {
+        padding: 32px 24px;
+      }
+      .pharmacy-info h3 {
+        font-size: 1.6rem;
+      }
+      .container {
+        padding: 0 20px;
+      }
+      .preloader-content {
+        min-width: 200px;
+        padding: 20px;
+      }
+      .preloader-text {
+        font-size: 1.2rem;
+      }
+    }
+    
+    .toast-msg {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #0f766e;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 60px;
+      z-index: 1000;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: 0.2s;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========== PRELOADER (4 SECONDS) ========== -->
+<div class="preloader" id="preloader">
+  <div class="preloader-content">
+    <div class="preloader-icon">
+      <i class="fas fa-stethoscope"></i>
+    </div>
+    <div class="preloader-text">Your Health Diagnostic</div>
+    <div class="preloader-progress">
+      <div class="preloader-progress-bar"></div>
+    </div>
+    <div class="preloader-sub">Loading expert care & pharmacy services...</div>
+  </div>
+</div>
+
+<!-- MAIN WEBSITE CONTENT (initially hidden) -->
+<div class="main-content" id="mainContent">
+  <div class="header">
+    <div class="container">
+      <div class="nav-bar">
+        <div class="logo">
+          <h1><i class="fas fa-stethoscope" style="color:#0d9488;"></i> Your Health</h1>
+          <p>Diagnostic Center & Pharmacy</p>
+        </div>
+        <!-- Desktop Menu (hidden on mobile) -->
+        <ul class="nav-links">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#pharmacy">Pharmacy</a></li>
+          <li><a href="#packages">Packages</a></li>
+          <li><a href="#doctors">Specialists</a></li>
+          <li><a href="#appointment" class="btn-appoint"><i class="fas fa-calendar-check"></i> Book Now</a></li>
+        </ul>
+        <!-- Mobile Hamburger (Three line bar) replaces Book Now button -->
+        <button class="mobile-menu-toggle" id="hamburgerBtn" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Overlay (fullscreen) -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay">
+    <div class="mobile-nav-drawer">
+      <div class="drawer-header">
+        <button class="close-drawer" id="closeDrawerBtn"><i class="fas fa-times"></i></button>
+      </div>
+      <ul class="drawer-nav-list">
+        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#services"><i class="fas fa-concierge-bell"></i> Services</a></li>
+        <li><a href="#pharmacy"><i class="fas fa-pills"></i> Pharmacy</a></li>
+        <li><a href="#packages"><i class="fas fa-boxes"></i> Packages</a></li>
+        <li><a href="#doctors"><i class="fas fa-user-md"></i> Specialists</a></li>
+        <li><a href="#appointment"><i class="fas fa-calendar-check"></i> Book Now</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <h2>Precision Diagnostics, <br>Compassionate Pharmacy Care</h2>
+        <p>State-of-the-art laboratory & genuine medicines under one roof. Your trusted partner in health since 2015.</p>
+        <div class="hero-buttons">
+          <a href="#appointment" class="btn-primary"><i class="fas fa-flask"></i> Book a Test</a>
+          <a href="#pharmacy" class="btn-secondary"><i class="fas fa-prescription-bottle"></i> Visit Pharmacy</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <i class="fas fa-hospital-user"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Services Section -->
+  <div class="container section" id="services">
+    <div class="section-title">Comprehensive Medical Services</div>
+    <div class="section-sub">From advanced lab diagnostics to prescription fulfillment — we cover all your health needs</div>
+    <div class="services-grid">
+      <div class="service-card"><i class="fas fa-microscope service-icon"></i><h3>Pathology Lab</h3><p>Complete blood work, hormone tests, histopathology with NABL-accredited protocols.</p></div>
+      <div class="service-card"><i class="fas fa-heartbeat service-icon"></i><h3>Cardiac Checkup</h3><p>ECG, TMT, 2D Echo, lipid profile – full cardiac risk assessment.</p></div>
+      <div class="service-card"><i class="fas fa-x-ray service-icon"></i><h3>Digital Radiology</h3><p>X-Ray, Ultrasound, CT scans with instant reporting & expert teleradiology.</p></div>
+      <div class="service-card"><i class="fas fa-pills service-icon"></i><h3>24/7 Pharmacy</h3><p>Genuine medicines, surgical supplies, and home delivery options available.</p></div>
+      <div class="service-card"><i class="fas fa-virus service-icon"></i><h3>COVID & PCR Tests</h3><p>Rapid antigen, RT-PCR with same-day digital reports.</p></div>
+      <div class="service-card"><i class="fas fa-brain service-icon"></i><h3>Neurology Clinic</h3><p>EEG, nerve conduction studies & specialist consultation.</p></div>
+    </div>
+  </div>
+
+  <!-- Pharmacy Highlight Section -->
+  <div class="container section" id="pharmacy">
+    <div class="pharmacy-row">
+      <div class="pharmacy-info">
+        <span class="badge"><i class="fas fa-store"></i> Your Health Pharmacy</span>
+        <h3>Trusted & Affordable Medicines</h3>
+        <p>We dispense only authentic, temperature-controlled medications. Our pharmacists provide free drug interaction checks and health advice 24/7.</p>
+        <ul class="medicine-list">
+          <li><i class="fas fa-check-circle"></i> 10,000+ prescription & OTC products</li>
+          <li><i class="fas fa-truck"></i> Free home delivery (within 5km)</li>
+          <li><i class="fas fa-chart-line"></i> Diabetes care, BP monitors, nebulizers</li>
+          <li><i class="fas fa-hand-holding-heart"></i> Senior citizen & chronic illness discount</li>
+        </ul>
+        <a href="#" class="btn-primary" style="margin-top:20px;display:inline-block;">Order Medicines Online <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div style="flex:0.8; text-align:center;"><i class="fas fa-capsules" style="font-size:6rem; color:#15803d;"></i><br><i class="fas fa-syringe" style="font-size:5rem; color:#0d9488; margin-top:20px;"></i></div>
+    </div>
+  </div>
+
+  <!-- Diagnostic Health Packages -->
+  <div class="container section" id="packages">
+    <div class="section-title">Health Checkup Packages</div>
+    <div class="section-sub">Affordable, customized diagnostic plans with doctor consultation included</div>
+    <div class="packages-grid">
+      <div class="package-card"><h4>Basic Wellness</h4><div class="price">₦49,000</div><ul class="package-features"><li><i class="fas fa-tint"></i> CBC + ESR</li><li><i class="fas fa-chart-line"></i> Fasting Glucose</li><li><i class="fas fa-heart"></i> Lipid Profile</li><li>ECG</li></ul><a href="#appointment" class="btn-secondary" style="font-size:0.8rem;">Enroll Now</a></div>
+      <div class="package-card"><h4>Diamond Plus</h4><div class="price">₦12,900</div><ul><li>Complete Hemogram</li><li>Liver & Kidney Function</li><li>Thyroid Panel (T3,T4,TSH)</li><li>Vitamin D & B12</li><li>Chest X-Ray</li></ul><a href="#appointment" class="btn-secondary">Book Test</a></div>
+      <div class="package-card"><h4>Cardiac Care</h4><div class="price">₦15,900</div><ul><li>High sensitivity CRP</li><li>Lipid Profile + ApoB</li><li>2D Echocardiography</li><li>TMT (Treadmill Test)</li><li>Cardiologist review</li></ul><a href="#appointment" class="btn-secondary">Check Heart</a></div>
+      <div class="package-card"><h4>Full Body Pro</h4><div class="price">₦21,000</div><ul><li>80+ Parameters</li><li>Ultrasound Abdomen</li><li>PFT (Lung Function)</li><li>Pap Smear (Women)</li><li>PSA (Men)</li></ul><a href="#appointment" class="btn-secondary">Subscribe</a></div>
+    </div>
+  </div>
+
+  <!-- Meet Our Specialists -->
+  <div class="container section" id="doctors">
+    <div class="section-title">Expert Medical Team</div>
+    <div class="section-sub">Experienced pathologists, pharmacists, and clinical specialists guiding your care.</div>
+    <div class="team-grid">
+      <div class="team-card"><i class="fas fa-user-md"></i><h4>Dr. Ananya Sharma</h4><p>MD Pathology | 15+ yrs</p></div>
+      <div class="team-card"><i class="fas fa-user-nurse"></i><h4>Dr. Vikram Mehta</h4><p>Senior Radiologist</p></div>
+      <div class="team-card"><i class="fas fa-laptop-medical"></i><h4>Dr. Priya Kapoor</h4><p>Clinical Pharmacologist</p></div>
+      <div class="team-card"><i class="fas fa-heartbeat"></i><h4>Dr. Rohan Nair</h4><p>Cardiac Consultant</p></div>
+    </div>
+  </div>
+
+  <!-- Appointment Booking & contact -->
+  <div class="container section" id="appointment">
+    <div class="appointment-section" style="padding: 48px 40px;">
+      <div class="form-grid">
+        <div class="form-text">
+          <h3><i class="fas fa-calendar-alt"></i> Schedule Your Visit</h3>
+          <p>Book lab tests, pharmacy consultation, or full body checkup. Our team will confirm within 1 hour.</p>
+          <ul style="margin-top: 20px; list-style: none;">
+            <li><i class="fas fa-phone-alt"></i> Emergency Helpline: +1 (800) 456-7890</li>
+            <li><i class="fas fa-envelope"></i> care@yourhealthdiagnostic.com</li>
+            <li><i class="fas fa-map-marker-alt"></i> 123 Medical Plaza, Downtown, Health City</li>
+          </ul>
+          <div style="margin-top: 30px;"><i class="fas fa-shield-alt"></i> GDPR & HIPAA compliant | Reports online</div>
+        </div>
+        <div class="appointment-form">
+          <h4 style="margin-bottom: 20px;">Request Appointment</h4>
+          <form id="bookingForm">
+            <div class="input-group"><input type="text" id="fullname" placeholder="Full Name *" required></div>
+            <div class="input-group"><input type="tel" id="phone" placeholder="Phone Number *" required></div>
+            <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
+            <div class="input-group">
+              <select id="serviceType">
+                <option value="Diagnostic Lab Test">Diagnostic Lab Test</option>
+                <option value="Pharmacy Pickup">Pharmacy Pickup / Consultation</option>
+                <option value="Health Checkup Package">Health Package</option>
+                <option value="Doctor Consultation">Doctor Teleconsult</option>
+              </select>
+            </div>
+            <div class="input-group"><input type="date" id="appointmentDate" placeholder="Preferred Date"></div>
+            <div class="input-group"><textarea rows="2" placeholder="Any symptoms or notes..."></textarea></div>
+            <button type="submit" class="form-btn"><i class="fas fa-check-circle"></i> Confirm Booking</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col"><h4>Your Health Diagnostic</h4><p>Accurate diagnosis, quality pharmacy, compassionate care. NABL & ISO certified labs.</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><ul><li>About Us</li><li>Pharmacy Delivery</li><li>Insurance Partners</li><li>Health Blog</li></ul></div>
+        <div class="footer-col"><h4>Working Hours</h4><p>Mon-Sat: 7am - 9pm<br>Sun & Holidays: 8am - 5pm<br>Pharmacy 24x7 open</p></div>
+        <div class="footer-col"><h4>Connect</h4><div class="social-icons"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-whatsapp"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div><p>Download Health Reports App</p></div>
+      </div>
+      <div class="copyright">© 2025 Your Health Diagnostic Center & Pharmacy. All medical services adhere to quality standards. | <i class="fas fa-copyright"></i> Empowering healthier lives.</div>
+    </div>
+  </footer>
+
+  <div id="toastMsg" class="toast-msg"></div>
+</div>
+
+<script>
+  // === PRELOADER LOGIC (4 SECONDS) ===
+  const preloader = document.getElementById('preloader');
+  const mainContent = document.getElementById('mainContent');
+  
+  // Ensure preloader shows for exactly 4 seconds, then fade out
+  setTimeout(function() {
+    if (preloader) {
+      preloader.classList.add('hide-preloader');
+      // Show main content after preloader fade starts
+      mainContent.classList.add('visible');
+    }
+  }, 2000); // 4 seconds delay
+
+  // Fallback: if something loads slower, still hide preloader after 4.2s max
+  setTimeout(function() {
+    if (preloader && !preloader.classList.contains('hide-preloader')) {
+      preloader.classList.add('hide-preloader');
+      mainContent.classList.add('visible');
+    }
+  }, 2200);
+
+  // === MOBILE HAMBURGER MENU LOGIC ===
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const overlay = document.getElementById('mobileNavOverlay');
+  const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+  const drawerLinks = document.querySelectorAll('.drawer-nav-list a');
+  
+  function openDrawer() {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeDrawer() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  
+  if (hamburgerBtn) hamburgerBtn.addEventListener('click', openDrawer);
+  if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeDrawer();
+  });
+  
+  drawerLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      closeDrawer();
+      const targetId = this.getAttribute('href');
+      if (targetId && targetId !== '#') {
+        const targetElem = document.querySelector(targetId);
+        if (targetElem) {
+          e.preventDefault();
+          targetElem.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+  
+  // === APPOINTMENT FORM NOTIFICATION ===
+  const form = document.getElementById('bookingForm');
+  const toast = document.getElementById('toastMsg');
+  function showMessage(msg, isError = false) {
+    toast.style.backgroundColor = isError ? '#b91c1c' : '#0f766e';
+    toast.innerHTML = `<i class="fas fa-${isError ? 'exclamation-circle' : 'check-circle'}"></i> ${msg}`;
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, 3200);
+  }
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('fullname').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const service = document.getElementById('serviceType').value;
+      if (!name || !phone) {
+        showMessage('Please provide your full name and phone number.', true);
+        return;
+      }
+      if (phone.length < 7) {
+        showMessage('Enter a valid phone number.', true);
+        return;
+      }
+      showMessage(`Thank you ${name}! Your ${service} request is received. Our team will call you shortly.`);
+      form.reset();
+    });
+  }
+  
+  // Smooth scroll for all anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === "#" || targetId === "") return;
+      const targetElem = document.querySelector(targetId);
+      if (targetElem) {
+        e.preventDefault();
+        targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+  
+  // Active nav highlight for desktop
+  const sections = document.querySelectorAll("section, .hero, #pharmacy, #packages, #doctors, #appointment");
+  const navLinks = document.querySelectorAll(".nav-links a");
+  window.addEventListener("scroll", () => {
+    let current = "";
+    const scrollPos = window.scrollY + 150;
+    sections.forEach(section => {
+      if(section.id) {
+        const offsetTop = section.offsetTop;
+        const offsetHeight = section.offsetHeight;
+        if(scrollPos >= offsetTop && scrollPos < offsetTop + offsetHeight) {
+          current = section.id;
+        }
+      } else if (section.classList && section.classList.contains("hero")) {
+        if(scrollPos < 500) current = "";
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.remove("active");
+      const href = link.getAttribute("href").substring(1);
+      if(href === current) link.classList.add("active");
+      if(current === "" && link.getAttribute("href") === "#") link.classList.add("active");
+    });
+  });
+</script>
+</body>
+</html>
+```
